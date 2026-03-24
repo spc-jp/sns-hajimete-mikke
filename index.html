@@ -3,772 +3,322 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SNSはじめてみっけ｜プロフィール作成</title>
+<title>SNS投稿はじめてみっけ｜みっけシリーズ</title>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f7f4ef;
+    --bg: #fff8f0;
     --card: #ffffff;
-    --primary: #ff6b35;
+    --card2: #fff4eb;
+    --primary: #ff7043;
     --primary-light: #fff0eb;
-    --accent: #3ecf8e;
-    --accent-light: #e8faf3;
-    --navy: #1a2744;
+    --primary-dark: #e8622f;
+    --accent: #00c9a7;
+    --accent-light: #e6faf6;
+    --yellow: #ffd600;
+    --blue: #448aff;
+    --blue-light: #e8efff;
+    --ig: #e1306c;
+    --th: #444;
+    --x: #1d9bf0;
+    --line: #06c755;
     --text: #2d2d2d;
-    --muted: #8a8a8a;
-    --border: #e8e3da;
-    --shadow: 0 4px 24px rgba(26,39,68,0.08);
-    --radius: 16px;
+    --muted: #9e9e9e;
+    --border: #ffe0cc;
+    --radius: 18px;
+    --shadow: 0 4px 20px rgba(255,112,67,0.10);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
-
-  /* ── ヘッダー ── */
   .header {
-    background: var(--navy);
-    padding: 20px 24px;
+    background: linear-gradient(135deg, #ff7043 0%, #ff9a3c 50%, #ffcc02 100%);
+    padding: 28px 24px 32px;
     text-align: center;
     position: relative;
     overflow: hidden;
   }
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 160px; height: 160px;
-    background: var(--primary);
-    border-radius: 50%;
-    opacity: 0.15;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: -30px; left: -30px;
-    width: 120px; height: 120px;
-    background: var(--accent);
-    border-radius: 50%;
-    opacity: 0.12;
-  }
+  .header::before { content: '✨'; position: absolute; font-size: 80px; top: -10px; left: -10px; opacity: 0.12; transform: rotate(-20deg); }
+  .header::after  { content: '📱'; position: absolute; font-size: 70px; bottom: -10px; right: 10px; opacity: 0.15; transform: rotate(10deg); }
   .header-badge {
     display: inline-block;
-    background: var(--primary);
+    background: rgba(255,255,255,0.35);
     color: #fff;
     font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    letter-spacing: 0.05em;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 14px; border-radius: 20px;
+    margin-bottom: 10px; letter-spacing: 0.08em;
   }
-  .header h1 {
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 26px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.3;
-  }
-  .header h1 span {
-    color: var(--primary);
-  }
-  .header p {
-    color: rgba(255,255,255,0.65);
-    font-size: 13px;
-    margin-top: 6px;
-  }
+  .header h1 { font-family: 'Zen Maru Gothic', sans-serif; font-size: 26px; font-weight: 900; color: #fff; line-height: 1.3; text-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+  .header h1 span { background: rgba(255,255,255,0.3); padding: 0 6px; border-radius: 6px; }
+  .header-sub { color: rgba(255,255,255,0.9); font-size: 13px; margin-top: 8px; font-weight: 500; }
+  .header-sns-row { display: flex; justify-content: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .header-sns-pill { background: rgba(255,255,255,0.25); color: #fff; font-size: 11px; font-weight: 700; font-family: 'Zen Maru Gothic', sans-serif; padding: 4px 10px; border-radius: 12px; }
 
-  /* ── メインコンテナ ── */
-  .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 24px 16px 60px;
-  }
+  .container { max-width: 620px; margin: 0 auto; padding: 24px 16px 80px; }
 
-  /* ── SNS選択 ── */
-  .section-label {
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .step-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px; height: 22px;
-    background: var(--primary);
-    color: #fff;
-    border-radius: 50%;
-    font-size: 11px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
+  .section-label { font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; font-size: 12px; font-weight: 900; flex-shrink: 0; box-shadow: 0 3px 8px rgba(255,112,67,0.35); }
 
-  .sns-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .sns-btn {
-    background: var(--card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-  }
-  .sns-btn:hover {
-    border-color: var(--primary);
-    background: var(--primary-light);
-    transform: translateY(-2px);
-  }
-  .sns-btn.active {
-    border-color: var(--primary);
-    background: var(--primary-light);
-    box-shadow: 0 0 0 3px rgba(255,107,53,0.15);
-  }
-  .sns-icon {
-    width: 32px; height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-  .sns-icon.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-  .sns-icon.x { background: #000; }
-  .sns-icon.facebook { background: #1877f2; }
-  .sns-icon.line { background: #06c755; }
+  .card { background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
 
-  /* ── 入力フォーム ── */
-  .form-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
-  .form-group {
-    margin-bottom: 18px;
-  }
+  .photo-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+  .toggle-btn { flex: 1; padding: 11px; border: 2px solid var(--border); border-radius: 12px; background: var(--card2); color: var(--muted); font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .toggle-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); box-shadow: 0 0 0 3px rgba(255,112,67,0.12); }
+
+  .photo-upload-area { border: 2.5px dashed #ffb89a; border-radius: 14px; padding: 32px 20px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--primary-light); position: relative; overflow: hidden; }
+  .photo-upload-area:hover { border-color: var(--primary); background: #ffeae0; }
+  .photo-upload-area.has-image { border-style: solid; border-color: var(--primary); padding: 0; background: #fff; }
+  .photo-upload-area img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 11px; display: block; }
+  .upload-icon { font-size: 36px; margin-bottom: 8px; }
+  .upload-text { color: var(--muted); font-size: 13px; line-height: 1.7; }
+  .upload-text span { color: var(--primary); font-weight: 700; }
+  #fileInput { display: none; }
+  .photo-remove { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; }
+  .has-image .photo-remove { display: flex; }
+
+  .form-group { margin-bottom: 16px; }
   .form-group:last-child { margin-bottom: 0; }
-  .form-label {
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 6px;
-    display: block;
-  }
-  .form-hint {
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 6px;
-    display: block;
-  }
-  .form-input, .form-textarea {
-    width: 100%;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: #faf9f7;
-    transition: border-color 0.2s;
-    outline: none;
-    resize: vertical;
-  }
-  .form-input:focus, .form-textarea:focus {
-    border-color: var(--primary);
-    background: var(--primary-light);
-  }
-  .form-textarea { min-height: 80px; }
+  .form-label { font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 7px; display: block; }
+  .form-input, .form-textarea { width: 100%; background: var(--card2); border: 2px solid var(--border); border-radius: 12px; padding: 12px 14px; font-family: 'Noto Sans JP', sans-serif; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s, background 0.2s; resize: vertical; }
+  .form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+  .form-input:focus, .form-textarea:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(255,112,67,0.10); }
+  .form-textarea { min-height: 90px; }
 
-  /* ── 例文タップ ── */
-  .example-row {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 7px;
-  }
-  .ex-chip {
-    padding: 5px 11px;
-    background: #f0f0f0;
-    border: 1.5px solid #ddd;
-    border-radius: 20px;
-    font-size: 11px;
-    color: #555;
-    cursor: pointer;
-    transition: all 0.18s;
-    font-family: 'Noto Sans JP', sans-serif;
-    line-height: 1.4;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-  .ex-chip:hover {
-    background: var(--primary-light);
-    border-color: var(--primary);
-    color: var(--primary);
-  }
-  .ex-label {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 6px;
-    margin-bottom: 2px;
-    display: block;
-  }
+  .chip-row { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 9px; }
+  .chip { padding: 5px 12px; background: #fff; border: 2px solid var(--border); border-radius: 20px; font-size: 12px; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 700; color: var(--muted); cursor: pointer; transition: all 0.18s; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
-  /* ── トーン選択 ── */
-  .tone-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .tone-chip {
-    padding: 6px 14px;
-    border: 2px solid var(--border);
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: #fff;
-    color: var(--text);
-  }
-  .tone-chip:hover { border-color: var(--accent); }
-  .tone-chip.active {
-    border-color: var(--accent);
-    background: var(--accent-light);
-    color: #1a7a55;
-  }
+  .sns-select-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .sns-select-btn { padding: 13px 12px; border: 2.5px solid var(--border); border-radius: 14px; background: var(--card2); color: var(--muted); font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+  .sns-mark { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; flex-shrink: 0; color: #fff; }
+  .ig-btn .sns-mark { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+  .th-btn .sns-mark { background: #444; }
+  .x-btn  .sns-mark { background: #1d9bf0; }
+  .ln-btn .sns-mark { background: #06c755; font-size: 10px; }
+  .sns-select-btn.active.ig-btn { border-color: var(--ig); background: #fff0f5; color: var(--ig); }
+  .sns-select-btn.active.th-btn { border-color: #888; background: #f5f5f5; color: #444; }
+  .sns-select-btn.active.x-btn  { border-color: var(--x); background: var(--blue-light); color: var(--x); }
+  .sns-select-btn.active.ln-btn { border-color: var(--line); background: #e6fdf0; color: #039d45; }
+  .sns-select-btn.active { box-shadow: 0 3px 12px rgba(0,0,0,0.10); transform: translateY(-1px); }
 
-  /* ── 生成ボタン ── */
-  .generate-btn {
-    width: 100%;
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    padding: 18px;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 17px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    letter-spacing: 0.03em;
-    margin-bottom: 16px;
-    box-shadow: 0 6px 20px rgba(255,107,53,0.35);
-  }
-  .generate-btn:hover:not(:disabled) {
-    background: #e85a28;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255,107,53,0.45);
-  }
-  .generate-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
+  .generate-btn { width: 100%; background: linear-gradient(135deg,var(--primary) 0%,#ff9a3c 100%); color: #fff; border: none; border-radius: 16px; padding: 20px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(255,112,67,0.40); margin-bottom: 16px; letter-spacing: 0.03em; }
+  .generate-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(255,112,67,0.50); }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-  /* ── ローディング ── */
-  .loading {
-    display: none;
-    text-align: center;
-    padding: 32px;
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 16px;
-  }
+  .loading { display: none; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 36px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow); }
   .loading.show { display: block; }
-  .loading-dots {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 12px;
-  }
-  .dot {
-    width: 10px; height: 10px;
-    background: var(--primary);
-    border-radius: 50%;
-    animation: bounce 1.2s infinite;
-  }
-  .dot:nth-child(2) { animation-delay: 0.2s; background: var(--accent); }
-  .dot:nth-child(3) { animation-delay: 0.4s; background: var(--navy); }
-  @keyframes bounce {
-    0%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-  }
-  .loading p { color: var(--muted); font-size: 13px; }
+  .loading-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 14px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; animation: bounce 1.2s infinite; }
+  .dot:nth-child(1) { background: var(--ig); }
+  .dot:nth-child(2) { background: var(--x); animation-delay: 0.2s; }
+  .dot:nth-child(3) { background: var(--line); animation-delay: 0.4s; }
+  .dot:nth-child(4) { background: var(--primary); animation-delay: 0.6s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-10px)} }
+  .loading p { color: var(--muted); font-size: 13px; line-height: 1.8; }
 
-  /* ── 結果エリア ── */
-  .result-card {
-    display: none;
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 16px;
-    animation: slideUp 0.4s ease;
-  }
-  .result-card.show { display: block; }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .result-header {
-    background: linear-gradient(135deg, var(--navy), #2a3f6b);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .result-header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .result-badge {
-    background: var(--accent);
-    color: #fff;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 10px;
-  }
-  .result-title {
-    color: #fff;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-  }
-  .result-body {
-    padding: 20px;
-  }
-  .result-text {
-    font-size: 15px;
-    line-height: 1.85;
-    color: var(--text);
-    white-space: pre-wrap;
-    background: #faf9f7;
-    border-radius: 10px;
-    padding: 16px;
-    border: 1px solid var(--border);
-    min-height: 120px;
-  }
-  .result-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 14px;
-  }
-  .copy-btn {
-    flex: 1;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 12px;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .copy-btn:hover { background: #31b87a; }
-  .copy-btn.copied { background: #1a7a55; }
-  .retry-btn {
-    background: var(--primary-light);
-    color: var(--primary);
-    border: 2px solid var(--primary);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-family: 'Zen Maru Gothic', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .retry-btn:hover { background: var(--primary); color: #fff; }
-
-  /* ── エラー ── */
-  .error-card {
-    display: none;
-    background: #fff5f5;
-    border: 2px solid #fca5a5;
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    color: #b91c1c;
-  }
+  .error-card { display: none; background: #fff5f5; border: 2px solid #fca5a5; border-radius: 12px; padding: 14px 18px; font-size: 13px; color: #b91c1c; margin-bottom: 16px; }
   .error-card.show { display: block; }
 
-  /* ── フッター ── */
-  .footer {
-    text-align: center;
-    padding: 24px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .footer a { color: var(--primary); text-decoration: none; }
+  .results-area { display: none; animation: fadeUp 0.4s ease; }
+  .results-area.show { display: block; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .results-title { font-family: 'Zen Maru Gothic', sans-serif; font-size: 15px; font-weight: 900; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
-  /* ── 告知バー ── */
-  .notice-bar {
-    background: var(--accent-light);
-    border: 1px solid #b2edd4;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 12px;
-    color: #1a7a55;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .result-block { background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; box-shadow: var(--shadow); transition: transform 0.2s; }
+  .result-block:hover { transform: translateY(-2px); }
+  .result-block-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--border); }
+  .result-block.ig-block  { border-color: #ffc0d4; }
+  .result-block.ig-block .result-block-header { background: #fff5f8; }
+  .result-block.th-block  { border-color: #ddd; }
+  .result-block.th-block .result-block-header { background: #f8f8f8; }
+  .result-block.x-block   { border-color: #c2dcf8; }
+  .result-block.x-block  .result-block-header { background: var(--blue-light); }
+  .result-block.ln-block  { border-color: #b3f0d0; }
+  .result-block.ln-block .result-block-header { background: #edfff5; }
+  .result-block-left { display: flex; align-items: center; gap: 8px; }
+  .result-sns-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; color: #fff; }
+  .result-sns-name { font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px; font-weight: 700; color: var(--text); }
+  .result-char { font-size: 11px; color: var(--muted); background: rgba(0,0,0,0.05); padding: 2px 8px; border-radius: 8px; }
+  .copy-mini-btn { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 5px 12px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 12px; font-weight: 700; color: var(--text); cursor: pointer; transition: all 0.18s; }
+  .copy-mini-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .copy-mini-btn.copied { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+  .result-text-area { padding: 16px; font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-wrap; min-height: 80px; }
+
+  .retry-btn { width: 100%; background: var(--primary-light); border: 2px solid #ffb89a; border-radius: 14px; padding: 14px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px; font-weight: 700; color: var(--primary); cursor: pointer; transition: all 0.2s; margin-top: 4px; }
+  .retry-btn:hover { background: var(--primary); color: #fff; }
+
+  .footer { text-align: center; padding: 28px; font-size: 11px; color: var(--muted); border-top: 2px solid var(--border); }
+  .footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
 </style>
 </head>
 <body>
 
-<!-- ヘッダー -->
 <div class="header">
   <div class="header-badge">✨ みっけシリーズ</div>
-  <h1>SNS<span>はじめて</span>みっけ</h1>
-  <p>プロフィールをAIが一緒に作ります</p>
+  <h1>SNS投稿<span>はじめて</span>みっけ</h1>
+  <p class="header-sub">写真とひと言で、投稿文をかんたんに作れる</p>
+  <div class="header-sns-row">
+    <span class="header-sns-pill">📸 Instagram</span>
+    <span class="header-sns-pill">@ Threads</span>
+    <span class="header-sns-pill">𝕏 X</span>
+    <span class="header-sns-pill">LINE公式</span>
+  </div>
 </div>
 
 <div class="container">
 
-  <div class="notice-bar">
-    💡 業種・強み・ターゲットを入れるだけで、そのまま使えるプロフィールが完成します
+  <div class="section-label"><span class="step-num">1</span>写真はありますか？</div>
+  <div class="card">
+    <div class="photo-toggle">
+      <button class="toggle-btn active" id="photoYesBtn" onclick="setPhotoMode(true)">📷 写真あり</button>
+      <button class="toggle-btn" id="photoNoBtn" onclick="setPhotoMode(false)">✏️ テキストだけ</button>
+    </div>
+    <div id="photoArea">
+      <div class="photo-upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">🖼️</div>
+        <div class="upload-text">タップして写真を選ぶ<br><span>JPG・PNG・HEIC 対応</span></div>
+        <button class="photo-remove" id="removeBtn" onclick="removePhoto(event)">✕</button>
+        <img id="previewImg" src="" alt="" style="display:none">
+      </div>
+      <input type="file" id="fileInput" accept="image/*" onchange="handlePhoto(event)">
+    </div>
   </div>
 
-  <!-- STEP1：SNS選択 -->
-  <div class="section-label">
-    <span class="step-badge">1</span>
-    どのSNSのプロフィールを作りますか？
-  </div>
-  <div class="sns-grid">
-    <button class="sns-btn" data-sns="Instagram" onclick="selectSNS(this)">
-      <div class="sns-icon instagram">📸</div>
-      Instagram
-    </button>
-    <button class="sns-btn" data-sns="X（旧Twitter）" onclick="selectSNS(this)">
-      <div class="sns-icon x">𝕏</div>
-      X（旧Twitter）
-    </button>
-    <button class="sns-btn" data-sns="Facebook" onclick="selectSNS(this)">
-      <div class="sns-icon facebook">f</div>
-      Facebook
-    </button>
-    <button class="sns-btn" data-sns="LINE公式アカウント" onclick="selectSNS(this)">
-      <div class="sns-icon line">LINE</div>
-      LINE公式
-    </button>
-  </div>
-
-  <!-- STEP2：情報入力 -->
-  <div class="section-label">
-    <span class="step-badge">2</span>
-    あなたのことを教えてください
-  </div>
-  <div class="form-card">
+  <div class="section-label"><span class="step-num">2</span>今日伝えたいことは？</div>
+  <div class="card">
     <div class="form-group">
-      <label class="form-label">業種・仕事の内容</label>
-      <input class="form-input" id="gyoshu" type="text" placeholder="ここに入力、または下の例をタップ ↓">
-      <span class="ex-label">👇 例をタップすると自動入力されます</span>
-      <div class="example-row">
-        <span class="ex-chip" onclick="fill('gyoshu','地域密着の税理士事務所')">📊 地域密着の税理士事務所</span>
-        <span class="ex-chip" onclick="fill('gyoshu','女性専用の美容サロン')">💄 女性専用の美容サロン</span>
-        <span class="ex-chip" onclick="fill('gyoshu','町の整骨院・接骨院')">🏥 町の整骨院・接骨院</span>
+      <label class="form-label">ひと言で教えてください</label>
+      <textarea class="form-textarea" id="message" placeholder="例：新メニューが完成しました。旬の野菜を使ったヘルシーランチです。"></textarea>
+      <div class="chip-row">
+        <span class="chip" onclick="appendMsg('新商品・サービスのご案内')">🆕 新商品</span>
+        <span class="chip" onclick="appendMsg('お客様の声・喜びの声')">😊 お客様の声</span>
+        <span class="chip" onclick="appendMsg('スタッフの日常・裏側紹介')">👥 スタッフ紹介</span>
+        <span class="chip" onclick="appendMsg('季節・イベントのご案内')">🎉 イベント</span>
+        <span class="chip" onclick="appendMsg('お役立ち情報・豆知識')">💡 豆知識</span>
       </div>
     </div>
     <div class="form-group">
-      <label class="form-label">あなたの強み・こだわり</label>
-      <textarea class="form-textarea" id="tsuyomi" placeholder="ここに入力、または下の例をタップ ↓"></textarea>
-      <span class="ex-label">👇 例をタップすると自動入力されます</span>
-      <div class="example-row">
-        <span class="ex-chip" onclick="fill('tsuyomi','創業20年。難しいことをわかりやすく説明するのが得意です')">📅 創業20年・わかりやすく</span>
-        <span class="ex-chip" onclick="fill('tsuyomi','女性スタッフのみ。お子さま連れでも安心して通えます')">👩 女性スタッフ・子連れOK</span>
-        <span class="ex-chip" onclick="fill('tsuyomi','当日・夜間対応OK。まずはお気軽にご相談ください')">🌙 当日・夜間対応OK</span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">どんな人に届けたいですか？</label>
-      <input class="form-input" id="target" type="text" placeholder="ここに入力、または下の例をタップ ↓">
-      <span class="ex-label">👇 例をタップすると自動入力されます</span>
-      <div class="example-row">
-        <span class="ex-chip" onclick="fill('target','相続・節税で悩む40〜60代の経営者・個人')">💼 40〜60代の経営者・個人</span>
-        <span class="ex-chip" onclick="fill('target','子育て中のママや女性の方')">👶 子育て中のママ・女性</span>
-        <span class="ex-chip" onclick="fill('target','腰・肩・膝の痛みで困っている地域の方')">💪 体の痛みで悩む地域の方</span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">一言で伝えたいこと（なくてもOK）</label>
-      <input class="form-input" id="hitokoto" type="text" placeholder="ここに入力、または下の例をタップ ↓">
-      <span class="ex-label">👇 例をタップすると自動入力されます</span>
-      <div class="example-row">
-        <span class="ex-chip" onclick="fill('hitokoto','初回相談は無料です。まずお話を聞かせてください')">🆓 初回相談無料</span>
-        <span class="ex-chip" onclick="fill('hitokoto','難しいことも一緒に考えます')">🤝 一緒に考えます</span>
-        <span class="ex-chip" onclick="fill('hitokoto','まずはLINEで気軽にご相談ください')">💬 LINEで気軽に相談</span>
+      <label class="form-label">業種・お店の種類</label>
+      <input class="form-input" id="gyoshu" type="text" placeholder="例：税理士事務所、美容サロン、整骨院">
+      <div class="chip-row">
+        <span class="chip" onclick="fillInput('gyoshu','税理士事務所')">📊 税理士</span>
+        <span class="chip" onclick="fillInput('gyoshu','美容サロン')">💄 美容サロン</span>
+        <span class="chip" onclick="fillInput('gyoshu','整骨院・接骨院')">🏥 整骨院</span>
+        <span class="chip" onclick="fillInput('gyoshu','飲食店・カフェ')">☕ 飲食・カフェ</span>
+        <span class="chip" onclick="fillInput('gyoshu','製造業')">🔧 製造業</span>
       </div>
     </div>
   </div>
 
-  <!-- STEP3：トーン選択 -->
-  <div class="section-label">
-    <span class="step-badge">3</span>
-    文章のトーンは？
-  </div>
-  <div class="form-card" style="padding: 16px 20px;">
-    <div class="tone-row">
-      <button class="tone-chip active" data-tone="親しみやすく温かい" onclick="selectTone(this)">😊 親しみやすく</button>
-      <button class="tone-chip" data-tone="プロフェッショナルで信頼感がある" onclick="selectTone(this)">💼 プロっぽく</button>
-      <button class="tone-chip" data-tone="元気でポジティブ" onclick="selectTone(this)">✨ 元気よく</button>
-      <button class="tone-chip" data-tone="落ち着いて誠実" onclick="selectTone(this)">🤝 誠実に</button>
+  <div class="section-label"><span class="step-num">3</span>どのSNSに投稿しますか？（複数OK）</div>
+  <div class="card">
+    <div class="sns-select-grid">
+      <button class="sns-select-btn ig-btn active" data-sns="instagram" onclick="toggleSNS(this)">
+        <div class="sns-mark">📸</div>Instagram
+      </button>
+      <button class="sns-select-btn th-btn active" data-sns="threads" onclick="toggleSNS(this)">
+        <div class="sns-mark">@</div>Threads
+      </button>
+      <button class="sns-select-btn x-btn active" data-sns="x" onclick="toggleSNS(this)">
+        <div class="sns-mark">𝕏</div>X（旧Twitter）
+      </button>
+      <button class="sns-select-btn ln-btn active" data-sns="line" onclick="toggleSNS(this)">
+        <div class="sns-mark" style="font-size:10px;font-weight:900">LINE</div>LINE公式
+      </button>
     </div>
   </div>
 
-  <!-- 生成ボタン -->
-  <button class="generate-btn" id="generateBtn" onclick="generateProfile()">
-    ✨ プロフィールを作る
-  </button>
+  <button class="generate-btn" id="generateBtn" onclick="generate()">✨ 投稿文を作る！</button>
 
-  <!-- ローディング -->
   <div class="loading" id="loading">
     <div class="loading-dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div>
+      <div class="dot"></div><div class="dot"></div>
     </div>
-    <p>AIがプロフィールを考えています...<br>少しだけお待ちください 😊</p>
+    <p>AIが各SNSに合わせた<br>投稿文を考えています 😊<br>少しだけお待ちください</p>
   </div>
 
-  <!-- エラー -->
-  <div class="error-card" id="errorCard">
-    ⚠️ <span id="errorMsg">エラーが発生しました。しばらく経ってから再度お試しください。</span>
-  </div>
+  <div class="error-card" id="errorCard">⚠️ <span id="errorMsg">エラーが発生しました。</span></div>
 
-  <!-- 結果 -->
-  <div class="result-card" id="resultCard">
-    <div class="result-header">
-      <div class="result-header-left">
-        <span class="result-badge">完成！</span>
-        <span class="result-title" id="resultSnsLabel">Instagramプロフィール</span>
-      </div>
-    </div>
-    <div class="result-body">
-      <div class="result-text" id="resultText"></div>
-      <div class="result-actions">
-        <button class="copy-btn" id="copyBtn" onclick="copyResult()">
-          📋 コピーする
-        </button>
-        <button class="retry-btn" onclick="generateProfile()">
-          🔄 作り直す
-        </button>
-      </div>
-    </div>
+  <div class="results-area" id="resultsArea">
+    <div class="results-title">🎉 投稿文が完成しました！</div>
+    <div id="resultsContainer"></div>
+    <button class="retry-btn" onclick="generate()">🔄 もう一度作り直す</button>
   </div>
 
 </div>
 
-<!-- フッター -->
 <div class="footer">
-  <p>SNSはじめてみっけ｜みっけシリーズ</p>
-  <p style="margin-top:4px"><a href="https://smileplusctg.com" target="_blank">Smile Plus Consulting</a></p>
+  <p>SNS投稿はじめてみっけ｜みっけシリーズ</p>
+  <p style="margin-top:4px">Developed by <a href="https://smileplusctg.com" target="_blank">SPC</a></p>
 </div>
 
 <script>
-// ── 例文タップ自動入力 ──
-function fill(id, text) {
-  const el = document.getElementById(id);
-  el.value = text;
-  el.focus();
-  el.style.borderColor = 'var(--primary)';
-  el.style.background = 'var(--primary-light)';
-  setTimeout(() => {
-    el.style.borderColor = '';
-    el.style.background = '';
-  }, 800);
-}
-
-// ── Cloudflare Worker URL ──
 const WORKER_URL = 'https://sns-hajimete-mikke.yymmatsu.workers.dev';
+const SNS_CONFIG = {
+  instagram:{ name:'Instagram', icon:'📸', iconBg:'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', blockClass:'ig-block', style:'絵文字を多めに使い、改行を多く入れて読みやすく。ハッシュタグを5〜10個最後につける。親しみやすくビジュアル重視の文体で。' },
+  threads:  { name:'Threads',   icon:'@',   iconBg:'#555', blockClass:'th-block', style:'500文字以内。絵文字は控えめに。人柄・想いが伝わるカジュアルな文体。ハッシュタグは不要。短くても深みのある内容に。' },
+  x:        { name:'X（旧Twitter）', icon:'𝕏', iconBg:'#1d9bf0', blockClass:'x-block', style:'140文字以内で簡潔に。インパクトのある書き出し。ハッシュタグ1〜2個。拡散されやすいシンプルな文体で。' },
+  line:     { name:'LINE公式',  icon:'LINE', iconBg:'#06c755', blockClass:'ln-block', style:'友達に話すような温かい文体。改行多め、絵文字適度に。最後にアクション（来店・相談・予約など）を促す一言を入れる。' }
+};
+let photoMode=true, photoBase64=null;
+let selectedSNS=new Set(['instagram','threads','x','line']);
 
-// ── SNS選択 ──
+function setPhotoMode(v){ photoMode=v; document.getElementById('photoYesBtn').classList.toggle('active',v); document.getElementById('photoNoBtn').classList.toggle('active',!v); document.getElementById('photoArea').style.display=v?'block':'none'; if(!v)photoBase64=null; }
+function handlePhoto(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; photoBase64=d.split(',')[1]; const img=document.getElementById('previewImg'); img.src=d; img.style.display='block'; document.getElementById('uploadArea').classList.add('has-image'); document.querySelector('.upload-icon').style.display='none'; document.querySelector('.upload-text').style.display='none'; }; r.readAsDataURL(f); }
+function removePhoto(e){ e.stopPropagation(); photoBase64=null; const img=document.getElementById('previewImg'); img.src=''; img.style.display='none'; document.getElementById('uploadArea').classList.remove('has-image'); document.querySelector('.upload-icon').style.display='block'; document.querySelector('.upload-text').style.display='block'; document.getElementById('fileInput').value=''; }
+function toggleSNS(el){ const s=el.dataset.sns; if(selectedSNS.has(s)){ if(selectedSNS.size<=1)return; selectedSNS.delete(s); el.classList.remove('active'); }else{ selectedSNS.add(s); el.classList.add('active'); } }
+function fillInput(id,v){ document.getElementById(id).value=v; }
+function appendMsg(v){ const el=document.getElementById('message'); el.value=el.value?el.value+'\n'+v:v; el.focus(); }
+function showError(m){ document.getElementById('errorMsg').textContent=m; document.getElementById('errorCard').classList.add('show'); }
+function hideError(){ document.getElementById('errorCard').classList.remove('show'); }
 
-let selectedSNS = '';
-let selectedTone = '親しみやすく温かい';
-
-function selectSNS(el) {
-  document.querySelectorAll('.sns-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  selectedSNS = el.dataset.sns;
-}
-
-function selectTone(el) {
-  document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  selectedTone = el.dataset.tone;
-}
-
-function showError(msg) {
-  const el = document.getElementById('errorCard');
-  document.getElementById('errorMsg').textContent = msg;
-  el.classList.add('show');
-}
-
-function hideError() {
-  document.getElementById('errorCard').classList.remove('show');
-}
-
-async function generateProfile() {
-  // バリデーション
-  const gyoshu = document.getElementById('gyoshu').value.trim();
-  const tsuyomi = document.getElementById('tsuyomi').value.trim();
-  const target = document.getElementById('target').value.trim();
-  const hitokoto = document.getElementById('hitokoto').value.trim();
-
-  if (!selectedSNS) {
-    showError('SNSを選んでください 😊');
-    return;
-  }
-  if (!gyoshu) {
-    showError('業種・仕事の内容を入力してください');
-    return;
-  }
-  if (!tsuyomi) {
-    showError('あなたの強み・こだわりを入力してください');
-    return;
-  }
-  if (!target) {
-    showError('届けたい相手を入力してください');
-    return;
-  }
-
+async function generate(){
+  const message=document.getElementById('message').value.trim();
+  const gyoshu=document.getElementById('gyoshu').value.trim();
+  if(!message){showError('今日伝えたいことを入力してください 😊');return;}
+  if(!gyoshu){showError('業種・お店の種類を入力してください');return;}
   hideError();
-
-  // UI切り替え
-  document.getElementById('generateBtn').disabled = true;
+  document.getElementById('generateBtn').disabled=true;
   document.getElementById('loading').classList.add('show');
-  document.getElementById('resultCard').classList.remove('show');
-
-  const prompt = `あなたはSNSプロフィール文の専門家です。
-以下の情報をもとに、${selectedSNS}のプロフィール文を作成してください。
-
-【業種・仕事の内容】
-${gyoshu}
-
-【強み・こだわり】
-${tsuyomi}
-
-【届けたい相手】
-${target}
-
-【一言メッセージ】
-${hitokoto || '（特になし）'}
-
-【文章のトーン】
-${selectedTone}
-
-【作成条件】
-・${selectedSNS}のプロフィール欄に最適な文字数・書き方にすること
-・絵文字を適度に使い、読みやすくすること
-・投稿テーマや発信内容もひと言触れること
-・最後にフォローを促す一言を入れること
-・そのままコピーして使える完成形で出力すること
-・説明文や補足は不要。プロフィール文のみを出力すること`;
-
-  try {
-    const res = await fetch(WORKER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const data = await res.json();
-    const text = data?.content?.[0]?.text || '';
-
-    if (!text) throw new Error('応答が空でした');
-
-    document.getElementById('resultSnsLabel').textContent = selectedSNS + 'プロフィール';
-    document.getElementById('resultText').textContent = text;
-    document.getElementById('resultCard').classList.add('show');
-
-    // スクロール
-    setTimeout(() => {
-      document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-
-  } catch (err) {
-    console.error(err);
-    showError('生成に失敗しました。Worker URLの設定をご確認ください。');
-  } finally {
-    document.getElementById('loading').classList.remove('show');
-    document.getElementById('generateBtn').disabled = false;
-  }
+  document.getElementById('resultsArea').classList.remove('show');
+  const snsList=Array.from(selectedSNS).map(s=>`【${SNS_CONFIG[s].name}】\n文体ルール：${SNS_CONFIG[s].style}`).join('\n\n');
+  const prompt=`あなたはSNS投稿文の専門家です。以下の情報をもとに各SNSに最適化された投稿文を作成してください。\n\n【業種】${gyoshu}\n【伝えたい内容】${message}\n${photoBase64&&photoMode?'【写真】添付の写真の内容も投稿文に活かしてください。':''}\n\n【各SNSの投稿文を作成してください】\n${snsList}\n\n【出力ルール】\n・説明文・前置き・補足は一切不要\n・プレーンテキストのみ\n\n出力形式（厳守）：\n[INSTAGRAM]\n（Instagram用投稿文）\n[/INSTAGRAM]\n\n[THREADS]\n（Threads用投稿文）\n[/THREADS]\n\n[X]\n（X用投稿文）\n[/X]\n\n[LINE]\n（LINE用投稿文）\n[/LINE]`;
+  try{
+    let userContent=photoBase64&&photoMode?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photoBase64}},{type:'text',text:prompt}]:prompt;
+    const res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:userContent}]})});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const text=data?.content?.[0]?.text||'';
+    if(!text)throw new Error('応答が空でした');
+    renderResults(text);
+  }catch(err){ console.error(err); showError('生成に失敗しました。Worker URLの設定をご確認ください。'); }
+  finally{ document.getElementById('loading').classList.remove('show'); document.getElementById('generateBtn').disabled=false; }
 }
 
-async function copyResult() {
-  const text = document.getElementById('resultText').textContent;
-  try {
-    await navigator.clipboard.writeText(text);
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✅ コピーしました！';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.innerHTML = '📋 コピーする';
-      btn.classList.remove('copied');
-    }, 2000);
-  } catch {
-    // フォールバック
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  }
+function renderResults(text){
+  const c=document.getElementById('resultsContainer'); c.innerHTML='';
+  [{key:'instagram',open:'[INSTAGRAM]',close:'[/INSTAGRAM]'},{key:'threads',open:'[THREADS]',close:'[/THREADS]'},{key:'x',open:'[X]',close:'[/X]'},{key:'line',open:'[LINE]',close:'[/LINE]'}]
+  .forEach(({key,open,close})=>{
+    if(!selectedSNS.has(key))return;
+    const s=text.indexOf(open),e=text.indexOf(close);
+    if(s===-1||e===-1)return;
+    const content=text.slice(s+open.length,e).trim();
+    const cfg=SNS_CONFIG[key];
+    const div=document.createElement('div'); div.className=`result-block ${cfg.blockClass}`;
+    div.innerHTML=`<div class="result-block-header"><div class="result-block-left"><div class="result-sns-icon" style="background:${cfg.iconBg}">${cfg.icon}</div><span class="result-sns-name">${cfg.name}</span><span class="result-char">${content.length}文字</span></div><button class="copy-mini-btn" onclick="copyBlock(this,'${key}')">📋 コピー</button></div><div class="result-text-area" id="result-${key}">${content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+    c.appendChild(div);
+  });
+  document.getElementById('resultsArea').classList.add('show');
+  setTimeout(()=>document.getElementById('resultsArea').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+async function copyBlock(btn,key){
+  const text=document.getElementById('result-'+key).textContent;
+  try{await navigator.clipboard.writeText(text);}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  btn.textContent='✅ コピー済み'; btn.classList.add('copied');
+  setTimeout(()=>{btn.textContent='📋 コピー';btn.classList.remove('copied');},2000);
 }
 </script>
 </body>
