@@ -266,7 +266,7 @@ let photoMode=true, photoBase64=null;
 let selectedSNS=new Set(['instagram','threads','x','line']);
 
 function setPhotoMode(v){ photoMode=v; document.getElementById('photoYesBtn').classList.toggle('active',v); document.getElementById('photoNoBtn').classList.toggle('active',!v); document.getElementById('photoArea').style.display=v?'block':'none'; if(!v)photoBase64=null; }
-function handlePhoto(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; photoBase64=d.split(',')[1]; const img=document.getElementById('previewImg'); img.src=d; img.style.display='block'; document.getElementById('uploadArea').classList.add('has-image'); document.querySelector('.upload-icon').style.display='none'; document.querySelector('.upload-text').style.display='none'; }; r.readAsDataURL(f); }
+function handlePhoto(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; window.photoMimeType=d.split(';')[0].split(':')[1]; photoBase64=d.split(',')[1]; const img=document.getElementById('previewImg'); img.src=d; img.style.display='block'; document.getElementById('uploadArea').classList.add('has-image'); document.querySelector('.upload-icon').style.display='none'; document.querySelector('.upload-text').style.display='none'; }; r.readAsDataURL(f); }
 function removePhoto(e){ e.stopPropagation(); photoBase64=null; const img=document.getElementById('previewImg'); img.src=''; img.style.display='none'; document.getElementById('uploadArea').classList.remove('has-image'); document.querySelector('.upload-icon').style.display='block'; document.querySelector('.upload-text').style.display='block'; document.getElementById('fileInput').value=''; }
 function toggleSNS(el){ const s=el.dataset.sns; if(selectedSNS.has(s)){ if(selectedSNS.size<=1)return; selectedSNS.delete(s); el.classList.remove('active'); }else{ selectedSNS.add(s); el.classList.add('active'); } }
 function fillInput(id,v){ document.getElementById(id).value=v; }
@@ -286,7 +286,7 @@ async function generate(){
   const snsList=Array.from(selectedSNS).map(s=>`【${SNS_CONFIG[s].name}】\n文体ルール：${SNS_CONFIG[s].style}`).join('\n\n');
   const prompt=`あなたはSNS投稿文の専門家です。以下の情報をもとに各SNSに最適化された投稿文を作成してください。\n\n【業種】${gyoshu}\n【伝えたい内容】${message}\n${photoBase64&&photoMode?'【写真】添付の写真の内容も投稿文に活かしてください。':''}\n\n【各SNSの投稿文を作成してください】\n${snsList}\n\n【出力ルール】\n・説明文・前置き・補足は一切不要\n・プレーンテキストのみ\n\n出力形式（厳守）：\n[INSTAGRAM]\n（Instagram用投稿文）\n[/INSTAGRAM]\n\n[THREADS]\n（Threads用投稿文）\n[/THREADS]\n\n[X]\n（X用投稿文）\n[/X]\n\n[LINE]\n（LINE用投稿文）\n[/LINE]`;
   try{
-    let userContent=photoBase64&&photoMode?[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photoBase64}},{type:'text',text:prompt}]:prompt;
+    let userContent=photoBase64&&photoMode?[{type:'image',source:{type:'base64',media_type:(window.photoMimeType||'image/jpeg'),data:photoBase64}},{type:'text',text:prompt}]:prompt;
     const res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:userContent}]})});
     if(!res.ok)throw new Error('HTTP '+res.status);
     const data=await res.json();
