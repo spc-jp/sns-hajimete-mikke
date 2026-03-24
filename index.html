@@ -293,7 +293,7 @@ async function generate(){
     const text=data?.content?.[0]?.text||'';
     if(!text)throw new Error('応答が空でした');
     renderResults(text);
-  }catch(err){ console.error(err); showError('生成に失敗しました。Worker URLの設定をご確認ください。'); }
+  }catch(err){ console.error(err); showError('エラー: ' + err.message); }
   finally{ document.getElementById('loading').classList.remove('show'); document.getElementById('generateBtn').disabled=false; }
 }
 
