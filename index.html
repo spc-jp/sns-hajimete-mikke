@@ -90,7 +90,7 @@
   .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
 
   .sns-select-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
-  .sns-select-btn { padding: 13px 12px; border: 2.5px solid var(--border); border-radius: 14px; background: var(--card2); color: var(--muted); font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; }
+  .sns-select-btn { padding: 13px 12px; border: 2.5px solid var(--border); border-radius: 14px; background: #f0f0f0; color: #bbb; font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 10px; opacity: 0.5; }
   .sns-mark { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; flex-shrink: 0; color: #fff; }
   .ig-btn .sns-mark { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
   .th-btn .sns-mark { background: #444; }
@@ -100,7 +100,7 @@
   .sns-select-btn.active.th-btn { border-color: #888; background: #f5f5f5; color: #444; }
   .sns-select-btn.active.x-btn  { border-color: var(--x); background: var(--blue-light); color: var(--x); }
   .sns-select-btn.active.ln-btn { border-color: var(--line); background: #e6fdf0; color: #039d45; }
-  .sns-select-btn.active { box-shadow: 0 3px 12px rgba(0,0,0,0.10); transform: translateY(-1px); }
+  .sns-select-btn.active { box-shadow: 0 3px 12px rgba(0,0,0,0.15); transform: translateY(-1px); opacity: 1; }
 
   .generate-btn { width: 100%; background: linear-gradient(135deg,var(--primary) 0%,#ff9a3c 100%); color: #fff; border: none; border-radius: 16px; padding: 20px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(255,112,67,0.40); margin-bottom: 16px; letter-spacing: 0.03em; }
   .generate-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(255,112,67,0.50); }
@@ -214,16 +214,16 @@
   <div class="section-label"><span class="step-num">3</span>どのSNSに投稿しますか？（複数OK）</div>
   <div class="card">
     <div class="sns-select-grid">
-      <button class="sns-select-btn ig-btn active" data-sns="instagram" onclick="toggleSNS(this)">
+      <button class="sns-select-btn ig-btn" data-sns="instagram" onclick="toggleSNS(this)">
         <div class="sns-mark">📸</div>Instagram
       </button>
-      <button class="sns-select-btn th-btn active" data-sns="threads" onclick="toggleSNS(this)">
+      <button class="sns-select-btn th-btn" data-sns="threads" onclick="toggleSNS(this)">
         <div class="sns-mark">@</div>Threads
       </button>
-      <button class="sns-select-btn x-btn active" data-sns="x" onclick="toggleSNS(this)">
+      <button class="sns-select-btn x-btn" data-sns="x" onclick="toggleSNS(this)">
         <div class="sns-mark">𝕏</div>X（旧Twitter）
       </button>
-      <button class="sns-select-btn ln-btn active" data-sns="line" onclick="toggleSNS(this)">
+      <button class="sns-select-btn ln-btn" data-sns="line" onclick="toggleSNS(this)">
         <div class="sns-mark" style="font-size:10px;font-weight:900">LINE</div>LINE公式
       </button>
     </div>
@@ -263,12 +263,12 @@ const SNS_CONFIG = {
   line:     { name:'LINE公式',  icon:'LINE', iconBg:'#06c755', blockClass:'ln-block', style:'友達に話すような温かい文体。改行多め、絵文字適度に。最後にアクション（来店・相談・予約など）を促す一言を入れる。' }
 };
 let photoMode=true, photoBase64=null;
-let selectedSNS=new Set(['instagram','threads','x','line']);
+let selectedSNS=new Set([]);
 
 function setPhotoMode(v){ photoMode=v; document.getElementById('photoYesBtn').classList.toggle('active',v); document.getElementById('photoNoBtn').classList.toggle('active',!v); document.getElementById('photoArea').style.display=v?'block':'none'; if(!v)photoBase64=null; }
 function handlePhoto(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; window.photoMimeType=d.split(';')[0].split(':')[1]; photoBase64=d.split(',')[1]; const img=document.getElementById('previewImg'); img.src=d; img.style.display='block'; document.getElementById('uploadArea').classList.add('has-image'); document.querySelector('.upload-icon').style.display='none'; document.querySelector('.upload-text').style.display='none'; }; r.readAsDataURL(f); }
 function removePhoto(e){ e.stopPropagation(); photoBase64=null; const img=document.getElementById('previewImg'); img.src=''; img.style.display='none'; document.getElementById('uploadArea').classList.remove('has-image'); document.querySelector('.upload-icon').style.display='block'; document.querySelector('.upload-text').style.display='block'; document.getElementById('fileInput').value=''; }
-function toggleSNS(el){ const s=el.dataset.sns; if(selectedSNS.has(s)){ if(selectedSNS.size<=1)return; selectedSNS.delete(s); el.classList.remove('active'); }else{ selectedSNS.add(s); el.classList.add('active'); } }
+function toggleSNS(el){ const s=el.dataset.sns; if(selectedSNS.has(s)){  selectedSNS.delete(s); el.classList.remove('active'); }else{ selectedSNS.add(s); el.classList.add('active'); } }
 function fillInput(id,v){ document.getElementById(id).value=v; }
 function appendMsg(v){ const el=document.getElementById('message'); el.value=el.value?el.value+'\n'+v:v; el.focus(); }
 function showError(m){ document.getElementById('errorMsg').textContent=m; document.getElementById('errorCard').classList.add('show'); }
@@ -278,7 +278,7 @@ async function generate(){
   const message=document.getElementById('message').value.trim();
   const gyoshu=document.getElementById('gyoshu').value.trim();
   if(!message){showError('今日伝えたいことを入力してください 😊');return;}
-  if(!gyoshu){showError('業種・お店の種類を入力してください');return;}
+  if(!gyoshu){showError('業種・お店の種類を入力してください');return;} if(selectedSNS.size===0){showError('SNSを1つ以上選んでください 😊');return;}
   hideError();
   document.getElementById('generateBtn').disabled=true;
   document.getElementById('loading').classList.add('show');
