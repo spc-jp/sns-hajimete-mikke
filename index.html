@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNSはじめてみっけ｜プロフィール作成</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --card: #ffffff;
+    --primary: #ff6b35;
+    --primary-light: #fff0eb;
+    --accent: #3ecf8e;
+    --accent-light: #e8faf3;
+    --navy: #1a2744;
+    --text: #2d2d2d;
+    --muted: #8a8a8a;
+    --border: #e8e3da;
+    --shadow: 0 4px 24px rgba(26,39,68,0.08);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── ヘッダー ── */
+  .header {
+    background: var(--navy);
+    padding: 20px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0.15;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -30px;
+    width: 120px; height: 120px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.12;
+  }
+  .header-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .header h1 {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.3;
+  }
+  .header h1 span {
+    color: var(--primary);
+  }
+  .header p {
+    color: rgba(255,255,255,0.65);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  /* ── メインコンテナ ── */
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ── SNS選択 ── */
+  .section-label {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sns-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .sns-btn {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .sns-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    transform: translateY(-2px);
+  }
+  .sns-btn.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(255,107,53,0.15);
+  }
+  .sns-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .sns-icon.instagram { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .sns-icon.x { background: #000; }
+  .sns-icon.facebook { background: #1877f2; }
+  .sns-icon.line { background: #06c755; }
+
+  /* ── 入力フォーム ── */
+  .form-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .form-group {
+    margin-bottom: 18px;
+  }
+  .form-group:last-child { margin-bottom: 0; }
+  .form-label {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-hint {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .form-input, .form-textarea {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #faf9f7;
+    transition: border-color 0.2s;
+    outline: none;
+    resize: vertical;
+  }
+  .form-input:focus, .form-textarea:focus {
+    border-color: var(--primary);
+    background: var(--primary-light);
+  }
+  .form-textarea { min-height: 80px; }
+
+  /* ── 例文タップ ── */
+  .example-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 7px;
+  }
+  .ex-chip {
+    padding: 5px 11px;
+    background: #f0f0f0;
+    border: 1.5px solid #ddd;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .ex-chip:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+  .ex-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 6px;
+    margin-bottom: 2px;
+    display: block;
+  }
+
+  /* ── トーン選択 ── */
+  .tone-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tone-chip {
+    padding: 6px 14px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #fff;
+    color: var(--text);
+  }
+  .tone-chip:hover { border-color: var(--accent); }
+  .tone-chip.active {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: #1a7a55;
+  }
+
+  /* ── 生成ボタン ── */
+  .generate-btn {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 18px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    letter-spacing: 0.03em;
+    margin-bottom: 16px;
+    box-shadow: 0 6px 20px rgba(255,107,53,0.35);
+  }
+  .generate-btn:hover:not(:disabled) {
+    background: #e85a28;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255,107,53,0.45);
+  }
+  .generate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ── ローディング ── */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 32px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .loading.show { display: block; }
+  .loading-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .dot {
+    width: 10px; height: 10px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: bounce 1.2s infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; background: var(--accent); }
+  .dot:nth-child(3) { animation-delay: 0.4s; background: var(--navy); }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+  }
+  .loading p { color: var(--muted); font-size: 13px; }
+
+  /* ── 結果エリア ── */
+  .result-card {
+    display: none;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+    animation: slideUp 0.4s ease;
+  }
+  .result-card.show { display: block; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-header {
+    background: linear-gradient(135deg, var(--navy), #2a3f6b);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .result-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .result-badge {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+  .result-title {
+    color: #fff;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .result-body {
+    padding: 20px;
+  }
+  .result-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text);
+    white-space: pre-wrap;
+    background: #faf9f7;
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    min-height: 120px;
+  }
+  .result-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .copy-btn {
+    flex: 1;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .copy-btn:hover { background: #31b87a; }
+  .copy-btn.copied { background: #1a7a55; }
+  .retry-btn {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .retry-btn:hover { background: var(--primary); color: #fff; }
+
+  /* ── エラー ── */
+  .error-card {
+    display: none;
+    background: #fff5f5;
+    border: 2px solid #fca5a5;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #b91c1c;
+  }
+  .error-card.show { display: block; }
+
+  /* ── フッター ── */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .footer a { color: var(--primary); text-decoration: none; }
+
+  /* ── 告知バー ── */
+  .notice-bar {
+    background: var(--accent-light);
+    border: 1px solid #b2edd4;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #1a7a55;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="header">
+  <div class="header-badge">✨ みっけシリーズ</div>
+  <h1>SNS<span>はじめて</span>みっけ</h1>
+  <p>プロフィールをAIが一緒に作ります</p>
+</div>
+
+<div class="container">
+
+  <div class="notice-bar">
+    💡 業種・強み・ターゲットを入れるだけで、そのまま使えるプロフィールが完成します
+  </div>
+
+  <!-- STEP1：SNS選択 -->
+  <div class="section-label">
+    <span class="step-badge">1</span>
+    どのSNSのプロフィールを作りますか？
+  </div>
+  <div class="sns-grid">
+    <button class="sns-btn" data-sns="Instagram" onclick="selectSNS(this)">
+      <div class="sns-icon instagram">📸</div>
+      Instagram
+    </button>
+    <button class="sns-btn" data-sns="X（旧Twitter）" onclick="selectSNS(this)">
+      <div class="sns-icon x">𝕏</div>
+      X（旧Twitter）
+    </button>
+    <button class="sns-btn" data-sns="Facebook" onclick="selectSNS(this)">
+      <div class="sns-icon facebook">f</div>
+      Facebook
+    </button>
+    <button class="sns-btn" data-sns="LINE公式アカウント" onclick="selectSNS(this)">
+      <div class="sns-icon line">LINE</div>
+      LINE公式
+    </button>
+  </div>
+
+  <!-- STEP2：情報入力 -->
+  <div class="section-label">
+    <span class="step-badge">2</span>
+    あなたのことを教えてください
+  </div>
+  <div class="form-card">
+    <div class="form-group">
+      <label class="form-label">業種・仕事の内容</label>
+      <input class="form-input" id="gyoshu" type="text" placeholder="ここに入力、または下の例をタップ ↓">
+      <span class="ex-label">👇 例をタップすると自動入力されます</span>
+      <div class="example-row">
+        <span class="ex-chip" onclick="fill('gyoshu','地域密着の税理士事務所')">📊 地域密着の税理士事務所</span>
+        <span class="ex-chip" onclick="fill('gyoshu','女性専用の美容サロン')">💄 女性専用の美容サロン</span>
+        <span class="ex-chip" onclick="fill('gyoshu','町の整骨院・接骨院')">🏥 町の整骨院・接骨院</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">あなたの強み・こだわり</label>
+      <textarea class="form-textarea" id="tsuyomi" placeholder="ここに入力、または下の例をタップ ↓"></textarea>
+      <span class="ex-label">👇 例をタップすると自動入力されます</span>
+      <div class="example-row">
+        <span class="ex-chip" onclick="fill('tsuyomi','創業20年。難しいことをわかりやすく説明するのが得意です')">📅 創業20年・わかりやすく</span>
+        <span class="ex-chip" onclick="fill('tsuyomi','女性スタッフのみ。お子さま連れでも安心して通えます')">👩 女性スタッフ・子連れOK</span>
+        <span class="ex-chip" onclick="fill('tsuyomi','当日・夜間対応OK。まずはお気軽にご相談ください')">🌙 当日・夜間対応OK</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">どんな人に届けたいですか？</label>
+      <input class="form-input" id="target" type="text" placeholder="ここに入力、または下の例をタップ ↓">
+      <span class="ex-label">👇 例をタップすると自動入力されます</span>
+      <div class="example-row">
+        <span class="ex-chip" onclick="fill('target','相続・節税で悩む40〜60代の経営者・個人')">💼 40〜60代の経営者・個人</span>
+        <span class="ex-chip" onclick="fill('target','子育て中のママや女性の方')">👶 子育て中のママ・女性</span>
+        <span class="ex-chip" onclick="fill('target','腰・肩・膝の痛みで困っている地域の方')">💪 体の痛みで悩む地域の方</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">一言で伝えたいこと（なくてもOK）</label>
+      <input class="form-input" id="hitokoto" type="text" placeholder="ここに入力、または下の例をタップ ↓">
+      <span class="ex-label">👇 例をタップすると自動入力されます</span>
+      <div class="example-row">
+        <span class="ex-chip" onclick="fill('hitokoto','初回相談は無料です。まずお話を聞かせてください')">🆓 初回相談無料</span>
+        <span class="ex-chip" onclick="fill('hitokoto','難しいことも一緒に考えます')">🤝 一緒に考えます</span>
+        <span class="ex-chip" onclick="fill('hitokoto','まずはLINEで気軽にご相談ください')">💬 LINEで気軽に相談</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP3：トーン選択 -->
+  <div class="section-label">
+    <span class="step-badge">3</span>
+    文章のトーンは？
+  </div>
+  <div class="form-card" style="padding: 16px 20px;">
+    <div class="tone-row">
+      <button class="tone-chip active" data-tone="親しみやすく温かい" onclick="selectTone(this)">😊 親しみやすく</button>
+      <button class="tone-chip" data-tone="プロフェッショナルで信頼感がある" onclick="selectTone(this)">💼 プロっぽく</button>
+      <button class="tone-chip" data-tone="元気でポジティブ" onclick="selectTone(this)">✨ 元気よく</button>
+      <button class="tone-chip" data-tone="落ち着いて誠実" onclick="selectTone(this)">🤝 誠実に</button>
+    </div>
+  </div>
+
+  <!-- 生成ボタン -->
+  <button class="generate-btn" id="generateBtn" onclick="generateProfile()">
+    ✨ プロフィールを作る
+  </button>
+
+  <!-- ローディング -->
+  <div class="loading" id="loading">
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+    <p>AIがプロフィールを考えています...<br>少しだけお待ちください 😊</p>
+  </div>
+
+  <!-- エラー -->
+  <div class="error-card" id="errorCard">
+    ⚠️ <span id="errorMsg">エラーが発生しました。しばらく経ってから再度お試しください。</span>
+  </div>
+
+  <!-- 結果 -->
+  <div class="result-card" id="resultCard">
+    <div class="result-header">
+      <div class="result-header-left">
+        <span class="result-badge">完成！</span>
+        <span class="result-title" id="resultSnsLabel">Instagramプロフィール</span>
+      </div>
+    </div>
+    <div class="result-body">
+      <div class="result-text" id="resultText"></div>
+      <div class="result-actions">
+        <button class="copy-btn" id="copyBtn" onclick="copyResult()">
+          📋 コピーする
+        </button>
+        <button class="retry-btn" onclick="generateProfile()">
+          🔄 作り直す
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- フッター -->
+<div class="footer">
+  <p>SNSはじめてみっけ｜みっけシリーズ</p>
+  <p style="margin-top:4px"><a href="https://smileplusctg.com" target="_blank">Smile Plus Consulting</a></p>
+</div>
+
+<script>
+// ── 例文タップ自動入力 ──
+function fill(id, text) {
+  const el = document.getElementById(id);
+  el.value = text;
+  el.focus();
+  el.style.borderColor = 'var(--primary)';
+  el.style.background = 'var(--primary-light)';
+  setTimeout(() => {
+    el.style.borderColor = '';
+    el.style.background = '';
+  }, 800);
+}
+
+// ── Cloudflare Worker URL ──
+const WORKER_URL = 'https://YOUR_WORKER_NAME.YOUR_SUBDOMAIN.workers.dev';
+
+// ── SNS選択 ──
+
+let selectedSNS = '';
+let selectedTone = '親しみやすく温かい';
+
+function selectSNS(el) {
+  document.querySelectorAll('.sns-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedSNS = el.dataset.sns;
+}
+
+function selectTone(el) {
+  document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedTone = el.dataset.tone;
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorCard');
+  document.getElementById('errorMsg').textContent = msg;
+  el.classList.add('show');
+}
+
+function hideError() {
+  document.getElementById('errorCard').classList.remove('show');
+}
+
+async function generateProfile() {
+  // バリデーション
+  const gyoshu = document.getElementById('gyoshu').value.trim();
+  const tsuyomi = document.getElementById('tsuyomi').value.trim();
+  const target = document.getElementById('target').value.trim();
+  const hitokoto = document.getElementById('hitokoto').value.trim();
+
+  if (!selectedSNS) {
+    showError('SNSを選んでください 😊');
+    return;
+  }
+  if (!gyoshu) {
+    showError('業種・仕事の内容を入力してください');
+    return;
+  }
+  if (!tsuyomi) {
+    showError('あなたの強み・こだわりを入力してください');
+    return;
+  }
+  if (!target) {
+    showError('届けたい相手を入力してください');
+    return;
+  }
+
+  hideError();
+
+  // UI切り替え
+  document.getElementById('generateBtn').disabled = true;
+  document.getElementById('loading').classList.add('show');
+  document.getElementById('resultCard').classList.remove('show');
+
+  const prompt = `あなたはSNSプロフィール文の専門家です。
+以下の情報をもとに、${selectedSNS}のプロフィール文を作成してください。
+
+【業種・仕事の内容】
+${gyoshu}
+
+【強み・こだわり】
+${tsuyomi}
+
+【届けたい相手】
+${target}
+
+【一言メッセージ】
+${hitokoto || '（特になし）'}
+
+【文章のトーン】
+${selectedTone}
+
+【作成条件】
+・${selectedSNS}のプロフィール欄に最適な文字数・書き方にすること
+・絵文字を適度に使い、読みやすくすること
+・投稿テーマや発信内容もひと言触れること
+・最後にフォローを促す一言を入れること
+・そのままコピーして使える完成形で出力すること
+・説明文や補足は不要。プロフィール文のみを出力すること`;
+
+  try {
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    const text = data?.content?.[0]?.text || '';
+
+    if (!text) throw new Error('応答が空でした');
+
+    document.getElementById('resultSnsLabel').textContent = selectedSNS + 'プロフィール';
+    document.getElementById('resultText').textContent = text;
+    document.getElementById('resultCard').classList.add('show');
+
+    // スクロール
+    setTimeout(() => {
+      document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+
+  } catch (err) {
+    console.error(err);
+    showError('生成に失敗しました。Worker URLの設定をご確認ください。');
+  } finally {
+    document.getElementById('loading').classList.remove('show');
+    document.getElementById('generateBtn').disabled = false;
+  }
+}
+
+async function copyResult() {
+  const text = document.getElementById('resultText').textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ コピーしました！';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = '📋 コピーする';
+      btn.classList.remove('copied');
+    }, 2000);
+  } catch {
+    // フォールバック
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+}
+</script>
+</body>
+</html>
