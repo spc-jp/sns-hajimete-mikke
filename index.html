@@ -57,7 +57,8 @@
   .header-sns-row { display: flex; justify-content: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
   .header-sns-pill { background: rgba(255,255,255,0.25); color: #fff; font-size: 11px; font-weight: 700; font-family: 'Zen Maru Gothic', sans-serif; padding: 4px 10px; border-radius: 12px; }
 
-  .container { max-width: 620px; margin: 0 auto; padding: 24px 16px 80px; }
+  /* 下部バナーのスペース確保のため padding-bottom を増やす */
+  .container { max-width: 620px; margin: 0 auto; padding: 24px 16px 120px; }
 
   .section-label { font-family: 'Zen Maru Gothic', sans-serif; font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
   .step-num { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; background: var(--primary); color: #fff; border-radius: 50%; font-size: 12px; font-weight: 900; flex-shrink: 0; box-shadow: 0 3px 8px rgba(255,112,67,0.35); }
@@ -106,7 +107,7 @@
 
   .generate-btn { width: 100%; background: linear-gradient(135deg,var(--primary) 0%,#ff9a3c 100%); color: #fff; border: none; border-radius: 16px; padding: 20px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 18px; font-weight: 900; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(255,112,67,0.40); margin-bottom: 16px; letter-spacing: 0.03em; }
   .generate-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(255,112,67,0.50); }
-  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; background: #ccc; box-shadow: none; }
 
   .loading { display: none; background: var(--card); border: 2px solid var(--border); border-radius: var(--radius); padding: 36px; text-align: center; margin-bottom: 16px; box-shadow: var(--shadow); }
   .loading.show { display: block; }
@@ -150,8 +151,37 @@
   .retry-btn { width: 100%; background: var(--primary-light); border: 2px solid #ffb89a; border-radius: 14px; padding: 14px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px; font-weight: 700; color: var(--primary); cursor: pointer; transition: all 0.2s; margin-top: 4px; }
   .retry-btn:hover { background: var(--primary); color: #fff; }
 
-  .footer { text-align: center; padding: 28px; font-size: 11px; color: var(--muted); border-top: 2px solid var(--border); }
+  .footer { text-align: center; padding: 28px; font-size: 11px; color: var(--muted); border-top: 2px solid var(--border); margin-bottom: 50px; }
   .footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
+  .pwd-link { display: inline-block; padding: 8px 16px; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); background: #fff; transition: all 0.2s; margin-top: 12px; }
+  .pwd-link:hover { background: var(--card2); color: var(--primary); border-color: var(--primary-light); }
+
+  /* 制限・バナー用のスタイル */
+  .status-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #fff;
+    text-align: center;
+    padding: 16px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.15);
+    z-index: 1000;
+    transition: all 0.3s;
+    letter-spacing: 0.05em;
+  }
+  .status-banner.ended {
+    background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+    cursor: pointer;
+  }
+  .status-banner.ended:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 -6px 20px rgba(255, 65, 108, 0.3);
+  }
 </style>
 </head>
 <body>
@@ -246,26 +276,91 @@
   <div class="results-area" id="resultsArea">
     <div class="results-title">🎉 投稿文が完成しました！</div>
     <div id="resultsContainer"></div>
-    <button class="retry-btn" onclick="generate()">🔄 もう一度作り直す</button>
+    <button class="retry-btn" id="retryBtn" onclick="generate()">🔄 もう一度作り直す</button>
   </div>
 
 </div>
 
 <div class="footer">
   <p>SNS投稿はじめてみっけ｜みっけシリーズ</p>
-  <p style="margin-top:4px">Developed by <a href="https://smileplusctg.com" target="_blank">SPC</a></p>
+  <a href="#" class="pwd-link" onclick="enterPassword(); return false;">🔑 購入済みの方：パスワード入力</a>
+  <p style="margin-top:16px">Developed by <a href="https://smileplusctg.com" target="_blank">SPC</a></p>
 </div>
+
+<!-- 固定バナー -->
+<div id="statusBanner" class="status-banner" style="display: none;"></div>
 
 <script>
 const WORKER_URL = 'https://sns-touko-api.yymmatsu.workers.dev/';
+const STRIPE_URL = 'https://example.com/stripe-checkout'; // ★ ここに実際のStripe決済URLを設定してください
+const PREMIUM_PASSWORD = 'mikke2026'; // ★ ここに設定したいパスワードを指定してください
+
 const SNS_CONFIG = {
   instagram:{ name:'Instagram', icon:'📸', iconBg:'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)', blockClass:'ig-block', style:'絵文字を多めに使い、改行を多く入れて読みやすく。ハッシュタグを5〜10個最後につける。親しみやすくビジュアル重視の文体で。' },
   threads:  { name:'Threads',   icon:'@',   iconBg:'#555', blockClass:'th-block', style:'500文字以内。絵文字は控えめに。人柄・想いが伝わるカジュアルな文体。ハッシュタグは不要。短くても深みのある内容に。' },
   x:        { name:'X（旧Twitter）', icon:'𝕏', iconBg:'#1d9bf0', blockClass:'x-block', style:'140文字以内で簡潔に。インパクトのある書き出し。ハッシュタグ1〜2個。拡散されやすいシンプルな文体で。' },
   line:     { name:'LINE公式',  icon:'LINE', iconBg:'#06c755', blockClass:'ln-block', style:'友達に話すような温かい文体。改行多め、絵文字適度に。最後にアクション（来店・相談・予約など）を促す一言を入れる。' }
 };
+
 let photoMode=true, photoBase64=null;
 let selectedSNS=new Set([]);
+
+// ----- 制限機能関連の状態管理 -----
+let usageCount = parseInt(localStorage.getItem('mikkeUsageCount') || '0', 10);
+let isPremium = localStorage.getItem('mikkePremium') === 'true';
+
+// ページ読み込み時にバナーの状態を更新
+window.addEventListener('DOMContentLoaded', updateBanner);
+
+function updateBanner() {
+  const banner = document.getElementById('statusBanner');
+  const generateBtn = document.getElementById('generateBtn');
+  const retryBtn = document.getElementById('retryBtn');
+
+  if (isPremium) {
+    banner.style.display = 'none';
+    generateBtn.disabled = false;
+    if(retryBtn) retryBtn.disabled = false;
+    return;
+  }
+
+  banner.style.display = 'block';
+  banner.classList.remove('ended');
+  banner.onclick = null;
+  banner.style.cursor = 'default';
+  generateBtn.disabled = false;
+  if(retryBtn) retryBtn.disabled = false;
+
+  if (usageCount === 0) {
+    banner.innerHTML = '🎁 今なら3回まで無料でお試しいただけます（登録不要）';
+  } else if (usageCount === 1) {
+    banner.innerHTML = '🎁 無料体験 残り2回（全3回）';
+  } else if (usageCount === 2) {
+    banner.innerHTML = '🎁 無料体験 残り1回（全3回）';
+  } else if (usageCount >= 3) {
+    banner.innerHTML = '⚠️ 無料体験が終了しました ご購入はこちら→';
+    banner.classList.add('ended');
+    banner.style.cursor = 'pointer';
+    banner.onclick = () => {
+      window.open(STRIPE_URL, '_blank');
+    };
+    generateBtn.disabled = true;
+    if(retryBtn) retryBtn.disabled = true;
+  }
+}
+
+function enterPassword() {
+  const pwd = prompt('Stripeからのサンクスメールに記載されているパスワードを入力してください：');
+  if (pwd === PREMIUM_PASSWORD) {
+    localStorage.setItem('mikkePremium', 'true');
+    isPremium = true;
+    alert('認証に成功しました！制限なしでご利用いただけます。');
+    updateBanner();
+  } else if (pwd !== null && pwd.trim() !== "") {
+    alert('パスワードが間違っています。');
+  }
+}
+// --------------------------------
 
 function setPhotoMode(v){ photoMode=v; document.getElementById('photoYesBtn').classList.toggle('active',v); document.getElementById('photoNoBtn').classList.toggle('active',!v); document.getElementById('photoArea').style.display=v?'block':'none'; if(!v)photoBase64=null; }
 function handlePhoto(e){ const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=(ev)=>{ const d=ev.target.result; window.photoMimeType=d.split(';')[0].split(':')[1]; photoBase64=d.split(',')[1]; const img=document.getElementById('previewImg'); img.src=d; img.style.display='block'; document.getElementById('uploadArea').classList.add('has-image'); document.querySelector('.upload-icon').style.display='none'; document.querySelector('.upload-text').style.display='none'; }; r.readAsDataURL(f); }
@@ -277,16 +372,25 @@ function showError(m){ document.getElementById('errorMsg').textContent=m; docume
 function hideError(){ document.getElementById('errorCard').classList.remove('show'); }
 
 async function generate(){
+  if (!isPremium && usageCount >= 3) {
+    showError('無料体験の制限回数に達しました。引き続きご利用いただくにはご購入をお願いします。');
+    updateBanner();
+    return;
+  }
+
   const message=document.getElementById('message').value.trim();
   const gyoshu=document.getElementById('gyoshu').value.trim();
   if(!message){showError('今日伝えたいことを入力してください 😊');return;}
   if(!gyoshu){showError('業種・お店の種類を入力してください');return;} if(selectedSNS.size===0){showError('SNSを1つ以上選んでください 😊');return;}
   hideError();
   document.getElementById('generateBtn').disabled=true;
+  if(document.getElementById('retryBtn')) document.getElementById('retryBtn').disabled=true;
   document.getElementById('loading').classList.add('show');
   document.getElementById('resultsArea').classList.remove('show');
+
   const snsList=Array.from(selectedSNS).map(s=>`【${SNS_CONFIG[s].name}】\n文体ルール：${SNS_CONFIG[s].style}`).join('\n\n');
   const prompt=`あなたはSNS投稿文の専門家です。以下の情報をもとに各SNSに最適化された投稿文を作成してください。\n\n【業種】${gyoshu}\n【伝えたい内容】${message}\n${photoBase64&&photoMode?'【写真】添付の写真の内容も投稿文に活かしてください。':''}\n\n【各SNSの投稿文を作成してください】\n${snsList}\n\n【出力ルール】\n・説明文・前置き・補足は一切不要\n・プレーンテキストのみ\n\n出力形式（厳守）：\n[INSTAGRAM]\n（Instagram用投稿文）\n[/INSTAGRAM]\n\n[THREADS]\n（Threads用投稿文）\n[/THREADS]\n\n[X]\n（X用投稿文）\n[/X]\n\n[LINE]\n（LINE用投稿文）\n[/LINE]`;
+  
   try{
     let userContent=photoBase64&&photoMode?[{type:'image',source:{type:'base64',media_type:(window.photoMimeType||'image/jpeg'),data:photoBase64}},{type:'text',text:prompt}]:prompt;
     const res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:userContent}]})});
@@ -296,9 +400,22 @@ async function generate(){
     if(data.error){ throw new Error('API:'+data.error.message); }
     const text=data?.content?.[0]?.text||'';
     if(!text){ throw new Error('空:'+JSON.stringify(data).slice(0,150)); }
+    
+    // 生成成功時にカウントを増やす
+    if (!isPremium) {
+      usageCount++;
+      localStorage.setItem('mikkeUsageCount', usageCount);
+    }
+    
     renderResults(text);
-  }catch(err){ console.error(err); showError('エラー: ' + err.message); }
-  finally{ document.getElementById('loading').classList.remove('show'); document.getElementById('generateBtn').disabled=false; }
+  }catch(err){ 
+    console.error(err); 
+    showError('エラー: ' + err.message); 
+  }
+  finally{ 
+    document.getElementById('loading').classList.remove('show'); 
+    updateBanner(); // ボタンの有効/無効制御も含めてバナーを再更新
+  }
 }
 
 function renderResults(text){
