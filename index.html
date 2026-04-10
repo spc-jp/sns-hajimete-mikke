@@ -29,13 +29,15 @@
     --shadow: 0 4px 20px rgba(255,112,67,0.10);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  html, body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
   .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     background: linear-gradient(135deg, #ff7043 0%, #ff9a3c 50%, #ffcc02 100%);
     padding: 28px 24px 32px;
     text-align: center;
-    position: relative;
     overflow: hidden;
   }
   .header::before { content: '✨'; position: absolute; font-size: 80px; top: -10px; left: -10px; opacity: 0.12; transform: rotate(-20deg); }
@@ -156,7 +158,7 @@
 
 <div class="header">
   <div class="header-badge">✨ みっけシリーズ</div>
-  <h1>SNS投稿<span>はじめて</span>みっけ</h1>
+  <h1><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" style="color:inherit;text-decoration:none;">SNS投稿<span>はじめて</span>みっけ</a></h1>
   <p class="header-sub">写真とひと言で、投稿文をかんたんに作れる</p>
   <div class="header-sns-row">
     <span class="header-sns-pill">📸 Instagram</span>
@@ -287,11 +289,13 @@ async function generate(){
   const prompt=`あなたはSNS投稿文の専門家です。以下の情報をもとに各SNSに最適化された投稿文を作成してください。\n\n【業種】${gyoshu}\n【伝えたい内容】${message}\n${photoBase64&&photoMode?'【写真】添付の写真の内容も投稿文に活かしてください。':''}\n\n【各SNSの投稿文を作成してください】\n${snsList}\n\n【出力ルール】\n・説明文・前置き・補足は一切不要\n・プレーンテキストのみ\n\n出力形式（厳守）：\n[INSTAGRAM]\n（Instagram用投稿文）\n[/INSTAGRAM]\n\n[THREADS]\n（Threads用投稿文）\n[/THREADS]\n\n[X]\n（X用投稿文）\n[/X]\n\n[LINE]\n（LINE用投稿文）\n[/LINE]`;
   try{
     let userContent=photoBase64&&photoMode?[{type:'image',source:{type:'base64',media_type:(window.photoMimeType||'image/jpeg'),data:photoBase64}},{type:'text',text:prompt}]:prompt;
-    const res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:userContent}]})});
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    const data=await res.json();
+    const res=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:[{role:'user',content:userContent}]})});
+    const raw=await res.text();
+    let data;
+    try{ data=JSON.parse(raw); }catch(e){ throw new Error('解析エラー:'+raw.slice(0,100)); }
+    if(data.error){ throw new Error('API:'+data.error.message); }
     const text=data?.content?.[0]?.text||'';
-    if(!text)throw new Error('応答が空でした');
+    if(!text){ throw new Error('空:'+JSON.stringify(data).slice(0,150)); }
     renderResults(text);
   }catch(err){ console.error(err); showError('エラー: ' + err.message); }
   finally{ document.getElementById('loading').classList.remove('show'); document.getElementById('generateBtn').disabled=false; }
